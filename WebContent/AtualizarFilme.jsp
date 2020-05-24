@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +15,7 @@
 <link rel="canonical"
 	href="https://getbootstrap.com/docs/3.3/examples/starter-template/">
 
-<title>Filme</title>
+<title>Atualizar Filme</title>
 
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -38,68 +37,68 @@
     <![endif]-->
 </head>
 <body>
-	<!-- modal -->
-	<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Excluir filme</h4>
-      </div>
-      <div class="modal-body">
-        <p>Confirma a exclusão do filme #${filme.id}-${filme.titulo}?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <a href="manter_filmes.do?acao=excluir&id_filme=${filme.id}" class="btn btn-danger">Excluir</a>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 	<!-- importa o menu do sistema -->
 	<c:import url="Menu.jsp"/>
 	<!-- conteiner principal -->
 	<div class="container">
-	<fmt:setLocale value="pt_BR"/>
-	<c:if test="${empty filme}">
-		<div class="row">
-			<h3 class="bg-danger" >Filme não encontrado.</h3>
+	<div class="row">
+		<h1>Atualizar Filme</h1>
+		<div class="lead">
+		<p> Altere os dados do filme #${filme.id}</p>
 		</div>
-		<div class="row">
-			<hr>
-			<a href="MostrarFilme.jsp" class="btn btn-default">Voltar</a>
+    </div>
+	
+	<form action="manter_filmes.do" method="POST">
+	<input type="hidden" name="id_filme" value="${filme.id}"/>
+	<div class="form-group">
+		<div class=row>
+		<div class="col-md-4">
+		<label>Gênero: </label><select name="genero" class="form-control" required>
+			<c:forEach var="genero" items="${generos}">
+				<c:if test="${genero.id eq filme.genero.id }">
+					<option value="${genero.id}" selected>${genero.nome}</option>
+				</c:if>
+				<c:if test="${genero.id ne filme.genero.id }">
+					<option value="${genero.id}">${genero.nome}</option>
+				</c:if>
+			</c:forEach>
+			</select>
 		</div>
-	</c:if>
-	<c:if test="${not empty filme}">
-		<div class="row">
-			<h1>#${filme.id} - ${filme.titulo}</h1>
-			<br>
+		<div class="col-md-8">
+		<label>Tí­tulo:</label><input type="text" class="form-control" name="titulo" value="${filme.titulo}" required/>
 		</div>
-		<div class="row">
-			<div class="col-md-3">
-				<img src="${filme.posterPath}" class="img-responsive">
+	</div>
+	</div>
+	<div class="form-group">
+		<label>Descrição: </label><textarea class="form-control" name="descricao" rows="4">${filme.descricao}</textarea>
+	</div>
+	<div class="form-group">
+		<div class=row>
+			<div class="col-md-8">
+				<label>Diretor: </label><input type="text" class="form-control"  value="${filme.diretor}" name="diretor"/>
 			</div>
-			<div class="col-md-9">
-				<p><strong>Gênero: </strong>${filme.genero.nome}</p>
-				<p><strong>Diretor: </strong>${filme.diretor}</p>
-				<p><strong>Lançamento: </strong>
-				<fmt:formatDate value="${filme.dataLancamento}" dateStyle="SHORT"/></p>
-				<p><strong>Descrição: </strong>${filme.descricao}</p>
-				<p><strong>Popularidade: </strong>
-				<fmt:formatNumber value="${filme.popularidade}" minFractionDigits="2"
-				maxFractionDigits="2"/>
-				</p>
+			<div class="col-md-4">
+				<label>Lançamento: </label><input type="date" class="form-control" name="data_lancamento"  value="${filme.dataLancamento}"/>
 			</div>
 		</div>
-		<hr />
-			<div id="actions" class="row">
-				<div class="col-md-12">
-					<a href="manter_filmes.do?acao=editar&id_filme=${filme.id}" class="btn btn-primary">Editar</a> 
-					<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal">Excluir</a> 
-					<a href="index.jsp" class="btn btn-default">Voltar</a>
-				</div>
+	</div>
+	<div class="form-group">
+		<div class=row>
+			<div class="col-md-8">
+				<label>Pôster: </label><input type="text" class="form-control" name="poster_path"  value="${filme.posterPath}"/>
 			</div>
-		</c:if>
+			<div class="col-md-4">
+				<label>Popularidade: </label><input type="number" class="form-control" name="popularidade" value="${filme.popularidade}"/>	
+			</div>
+		</div>
+	</div>
+		<div id="actions" class="row">
+			<div class="col-md-12">
+				<button type="submit" class="btn btn-primary" name="acao" value="atualizar">Atualizar</button>
+				<a href="index.jsp" class="btn btn-default">Voltar</a>
+			</div>
+		</div>
+	</form>
 	</div><!-- /.container -->
 
 
@@ -111,7 +110,7 @@
 	<script>
 		window.jQuery
 				|| document
-						.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+						.write('<script src="js/vendor/jquery.min.js"><\/script>')
 	</script>
 	<script src="js/bootstrap.min.js"></script>
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
